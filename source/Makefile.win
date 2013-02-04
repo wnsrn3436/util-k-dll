@@ -1,0 +1,40 @@
+# Project: KDLL
+# Compiler: Default GCC compiler
+# Compiler Type: MingW 3
+# Makefile created by wxDev-C++ IDE 7.4.2.569 on 04-02-13 22:19
+
+WXLIBNAME = wxmsw29u
+CPP       = g++.exe
+CC        = gcc.exe
+WINDRES   = "windres.exe"
+OBJ       = Objects/MingW/ime.o
+LINKOBJ   = "Objects/MingW/ime.o"
+LIBS      = -L"C:/Program Files/Dev-Cpp/lib/wx/gcc_lib" -L"C:/Program Files/Dev-Cpp/lib" -L"C:/Program Files/Dev-Cpp/MinGW32/lib" -Wl,--add-stdcall-alias "../../../../../Program Files/Dev-Cpp/MinGW32/lib/libimm32.a"  
+INCS      = -I"C:/Program Files/Dev-Cpp/MinGW32/include"
+CXXINCS   = -I"C:/Program Files/Dev-Cpp/MinGW32/include" -I"C:/Program Files/Dev-Cpp/" -I"C:/Program Files/Dev-Cpp/include/common"
+RCINCS    = --include-dir "C:/PROGRA~1/Dev-Cpp/include/common"
+BIN       = Output/MingW/KDLL.dll
+DEFINES   = 
+CXXFLAGS  = $(CXXINCS) $(DEFINES) -DBUILDING_DLL=1   -fexpensive-optimizations -O3
+CFLAGS    = $(INCS) $(DEFINES) -DBUILDING_DLL=1   -fexpensive-optimizations -O3
+GPROF     = gprof.exe
+ifeq ($(OS),Windows_NT)
+   RM = del /Q
+   FixPath = $(subst /,\,$1)
+else
+   RM = rm -f
+   FixPath = $1
+endif
+LINK      = g++.exe
+
+.PHONY: all all-before all-after clean clean-custom
+all: all-before $(BIN) all-after
+
+clean: clean-custom
+	$(RM) $(call FixPath,$(LINKOBJ)) "$(call FixPath,$(BIN))"
+
+$(BIN): $(OBJ)
+	$(LINK) -shared $(STATICLIB) $(LINKOBJ) $(LIBS) -Wl,--out-implib,Output/MingW/libKDLL.a -o Output/MingW/KDLL.dll
+
+Objects/MingW/ime.o: $(GLOBALDEPS) ime.cpp
+	$(CPP) -c ime.cpp -o Objects/MingW/ime.o $(CXXFLAGS)

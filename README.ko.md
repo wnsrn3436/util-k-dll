@@ -1,6 +1,8 @@
 # K-DLL
 
-게임메이커에서 한글을 입력받게 해 주는 C++ DLL 이다. 게임메이커는 조합이 끝난 글자만 `keyboard_string` 에 넣어 주기 때문에 지금 치고 있는 한글이 화면에 보이지 않는다. 이 DLL 은 Windows 의 IME 에서 조합 중인 글자를 직접 읽어 오고, 한/영 상태를 코드에서 바꾸거나 읽고, IME 조합상자를 숨기며, CP949 와 UTF-8 사이의 변환도 해 준다. DLL 과 게임메이커 확장 패키지, 채팅창 예제로 구성된다.
+[English](README.md)
+
+게임메이커에서 한글을 입력받게 하는 C++ DLL 이다. 게임메이커는 조합이 끝난 글자만 `keyboard_string` 에 넣어 주기 때문에 지금 치고 있는 한글이 화면에 보이지 않는다. 이 DLL 은 Windows 의 IME 에서 조합 중인 글자를 직접 읽어 온다. 한/영 상태를 코드에서 바꾸거나 읽고 IME 조합상자를 숨기며 CP949 와 UTF-8 사이의 변환도 한다. DLL 과 게임메이커 확장 패키지, 채팅창 예제로 구성된다.
 
 <p>
   <img src="docs/screenshots/screenshot-1.png" width="316" alt="예제 화면">
@@ -29,7 +31,7 @@ Releases에서 받은 압축 파일에는 게임메이커 8 확장 패키지 `k-
 sex_draw_text(16, 256, keyboard_string+ime_get_string_ansi())
 ```
 
-예제는 300x300 채팅창이다. 글자를 치면 조합 중인 한글까지 바로 보이고, Enter 로 로그에 쌓이며, Backspace 는 한글 한 글자를 통째로 지운다. 왼쪽 위에 FPS 와 한/영 상태가 표시된다.
+예제는 300x300 채팅창이다. 글자를 치면 조합 중인 한글까지 바로 보이고 Enter 로 로그에 쌓이며, Backspace 는 한글 한 글자를 통째로 지운다. 왼쪽 위에 FPS 와 한/영 상태가 표시된다.
 
 
 ## 구현 원리
@@ -50,7 +52,7 @@ while(hWnd!=NULL)
 }
 ```
 
-**조합 중인 글자는 IME 에서 읽는다.** `ImmGetCompositionString` 을 길이를 물어보는 호출과 내용을 받는 호출로 두 번 불러 조합 문자열을 얻는다. ANSI 판은 그대로 돌려주고, 유니코드 판은 `WideCharToMultiByte` 로 UTF-8 로 바꿔 돌려준다. 글자가 확정되면 게임메이커가 `keyboard_string` 에 넣어 주므로, 둘을 이어 붙이면 입력 중인 문장이 된다.
+**조합 중인 글자는 IME 에서 읽는다.** `ImmGetCompositionString` 을 길이를 물어보는 호출과 내용을 받는 호출로 두 번 불러 조합 문자열을 얻는다. ANSI 판은 그대로 돌려주고 유니코드 판은 `WideCharToMultiByte` 로 UTF-8 로 바꿔서 넘긴다. 글자가 확정되면 게임메이커가 `keyboard_string` 에 넣어 주므로, 둘을 이어 붙이면 입력 중인 문장이 된다.
 
 **조합상자는 창 밖으로 옮겨 숨긴다.** IME 조합상자를 끄는 API 는 없어서 `ImmSetCompositionWindow` 로 상자 위치를 창 왼쪽 위에서 1000픽셀 밖으로 보낸다. 그런데 IME 가 조합을 시작할 때마다 위치를 되돌리므로, `WH_GETMESSAGE` 훅을 걸어 `WM_IME_COMPOSITION` 메시지가 올 때마다 다시 옮긴다. 다시 보이게 할 때는 훅을 풀고 기본 위치로 되돌린다.
 
